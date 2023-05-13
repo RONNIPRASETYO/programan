@@ -1,0 +1,177 @@
+package jadwalmatakuliah;
+
+import java.util.Scanner;
+
+interface Data {
+  void inputData();
+  void editData();
+  void hapusData();
+  void tampilData();
+}
+
+abstract class MataKuliah implements Data {
+  protected String nama;
+  protected int smt;
+
+  public MataKuliah(String nama, int smt) {
+    this.nama = nama;
+    this.smt = smt;
+  }
+
+  public void tampilData() {
+    System.out.println("Mata Kuliah: " + nama);
+    System.out.println("Semester: " + smt);
+  }
+}
+
+class Teori extends MataKuliah {
+  protected String dosen;
+  protected String kelas;
+
+  public Teori(String nama, int smt, String dosen, String kelas) {
+    super(nama, smt);
+    this.dosen = dosen;
+    this.kelas = kelas;
+  }
+
+  public void inputData() {
+    Scanner sc = new Scanner(System.in);
+    System.out.print("Mata Kuliah: ");
+    nama = sc.nextLine();
+    System.out.print("Semester: ");
+    smt = sc.nextInt();
+    sc.nextLine();
+    System.out.print("Nama Dosen: ");
+    dosen = sc.nextLine();
+    System.out.print("Nomer Kelas: ");
+    kelas = sc.nextLine();
+    System.out.println("Data telah ditambahkan.");
+  }
+
+  public void editData() {
+    Scanner sc = new Scanner(System.in);
+    System.out.print("Masukan Mata Kuliah: ");
+    String namaMK = sc.nextLine();
+    if (nama.equals(namaMK)) {
+      System.out.print("Nama Dosen Baru: ");
+      dosen = sc.nextLine();
+      System.out.print("Nomer Kelas Baru: ");
+      kelas = sc.nextLine();
+      System.out.println("Data telah diubah.");
+    } else {
+      System.out.println("Data tidak ditemukan.");
+    }
+  }
+
+  public void hapusData() {
+    Scanner sc = new Scanner(System.in);
+    System.out.print("Masukkan Data Mata Kuliah: ");
+    String namaMK = sc.nextLine();
+    if (nama.equals(namaMK)) {
+      nama = "";
+      smt = 0;
+      dosen = "";
+      kelas = "";
+      System.out.println("Data telah dihapus.");
+    } else {
+      System.out.println("Data tidak ditemukan.");
+    }
+  }
+
+  public void tampilData() {
+    System.out.println("Data Mata Kuliah:");
+    super.tampilData();
+    System.out.println("Nama Dosen: " + dosen);
+    System.out.println("Nomer Kelas: " + kelas);
+  }
+}
+
+public class Main {
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
+    MataKuliah[] jadwal = new MataKuliah[10];
+    int count = 0;
+    int pilih;
+    do {
+      System.out.println("\n DATA MAHASISWA");
+      System.out.println("Ronni Prasetyo");
+      System.out.println("211011400077");
+      System.out.println("04TPLE001");
+      System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~");
+      System.out.println("1. Input Data");
+      System.out.println("2. Edit atau Hapus Data");
+      System.out.println("3. Menampilkan Data");
+      System.out.println("4. Keluar");
+      System.out.print("Masukkan Pilihan: ");
+      pilih = sc.nextInt();
+
+      switch (pilih) {
+      case 1:
+        System.out.println("\n INPUT DATA");
+        System.out.println("Prodi Teknik Informatika");
+        System.out.print("Ketik 1: ");
+        int pilihMK = sc.nextInt();
+        sc.nextLine();
+
+        if (pilihMK == 1) {
+          jadwal[count] = new Teori("", 0, "", "");
+          jadwal[count].inputData();
+          count++;
+        } else {
+          System.out.println("Pilihan tidak valid.");
+        }
+        break;
+
+      case 2:
+        System.out.println("\n EDIT ATAU HAPUS DATA");
+        System.out.println("1. Edit Data");
+        System.out.println("2. Hapus Data");
+        System.out.print("Masukkan Pilihan: ");
+        int pilihEdit = sc.nextInt();
+        sc.nextLine();
+        System.out.print("Masukkan Mata Kuliah yang ingin dirubah/hapus: ");
+        String namaMK = sc.nextLine();
+        boolean found = false;
+
+        for (int i = 0; i < count; i++) {
+          if (jadwal[i].nama.equals(namaMK)) {
+            found = true;
+            if (pilihEdit == 1) {
+              jadwal[i].editData();
+            } else if (pilihEdit == 2) {
+              jadwal[i].hapusData();
+              for (int j = i; j < count - 1; j++) {
+                jadwal[j] = jadwal[j + 1];
+              }
+              jadwal[count - 1] = null;
+              count--;
+            }
+            break;
+          }
+        }
+        if (!found) {
+          System.out.println("Data tidak ditemukan.");
+        }
+        break;
+
+      case 3:
+        System.out.println("\n MENAMPILKAN DATA");
+        for (int i = 0; i < count; i++) {
+          jadwal[i].tampilData();
+          System.out.println();
+        }
+        break;
+
+      case 4:
+        System.out.println(" Program selesai.");
+        break;
+
+      default:
+        System.out.println("Pilihan tidak valid.");
+        break;
+      }
+
+    } while (pilih != 4);
+  }
+
+}
